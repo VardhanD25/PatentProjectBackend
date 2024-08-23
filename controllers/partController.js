@@ -18,14 +18,14 @@ const findSpecifiedDensity = async (req, res) => {
     const standardAlloyId = part.standardAlloyId; // Assuming field name in Part schema is standardAlloyId
 
     if (!standardAlloyId) {
-      return res.status(404).json({ message: 'Standard alloy not found for this part.' });
+      return res.status(200).json({formattedDensity:'-1'});
     }
 
     // Fetch the standard alloy from the database using the standard alloy ID (string)
     const standardAlloy = await StandardAlloy.findById(standardAlloyId);
 
     if (!standardAlloy) {
-      return res.status(404).json({ message: 'Standard alloy not found.' });
+      return res.status(404).json({formattedDensity:'-1'});
     }
 
     // Retrieve the density from the standard alloy

@@ -47,8 +47,20 @@ const getAllStandardAlloys = async (req, res) => {
     }
   };
 
+const getStandardAlloy=async(req,res)=>{
+    try{
+        const {standardAlloyId} =req.params;
+        const alloy=await StandardAlloy.findById(standardAlloyId);
+        res.status(200).json({alloy});
+    }
+    catch(error){
+        console.error('Error fetching standard alloy:',error);
+        res.status(500).json({message:'Failed to fetch standard alloy'});
+    }
+};
+
 
 
 module.exports = {
-    addStandardAlloy,getAllStandardAlloys
+    addStandardAlloy,getAllStandardAlloys,getStandardAlloy
 };
