@@ -399,36 +399,44 @@ const updatePart = async (req, res) => {
   };
   
 
-const calculateCompactnessRatio = (req, res) => {
-  try {
-    // Extract query parameters
-    const { 
-      partDensity,
-      theoreticalDensity
-    } = req.query;
-
-    // Validate parameters
-    if (!partDensity || !theoreticalDensity) {
-      return res.status(400).json({ error: 'Missing required parameters' });
+  const calculateCompactnessRatio = (req, res) => {
+    try {
+      // Extract query parameters
+      const { 
+        partDensity,
+        theoreticalDensity
+      } = req.query;
+  
+      // Validate parameters
+      if (!partDensity || !theoreticalDensity) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+      }
+  
+      // Convert parameters to numbers
+      const partDensityNum = parseFloat(partDensity);
+      const theoreticalDensityNum = parseFloat(theoreticalDensity);
+  
+      // Check for valid numbers
+      if (isNaN(partDensityNum) || isNaN(theoreticalDensityNum)) {
+        return res.status(400).json({ error: 'Invalid parameter values' });
+      }
+      
+      // Calculate compactness ratio
+      const compactnessRatio = (partDensityNum * 100) / theoreticalDensityNum;
+  
+      // Check if compactness ratio is greater than 100
+      if (compactnessRatio > 100) {
+        return res.status(400).json({ error: 'Compactness ratio cannot be greater than 100' });
+      }
+  
+      // Respond with the calculated compactness ratio
+      res.json({ compactnessRatio: compactnessRatio.toFixed(2) });
+    } catch (error) {
+      console.error('Error calculating compactness ratio:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
-
-    // Convert parameters to numbers
-    const partDensityNum = parseFloat(partDensity);
-    const theoreticalDensityNum = parseFloat(theoreticalDensity);
-
-    // Check for valid numbers
-    if (isNaN(partDensityNum) || isNaN(theoreticalDensityNum)) {
-      return res.status(400).json({ error: 'Invalid parameter values' });
-    }
-    
-    const compactnessRatio = (partDensityNum*100)/theoreticalDensityNum;
-    // Respond with the calculated density
-    res.json({ compactnessRatio: compactnessRatio.toFixed(2) });
-  } catch (error) {
-    console.error('Error calculating compactness ratio:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+  };
+  
 
 
 
